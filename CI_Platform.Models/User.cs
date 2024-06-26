@@ -85,6 +85,8 @@ namespace CI_Platform.Models
         public ICollection<RecentVolunteer>? RecentVolunteers { get; set; }
 
         public ICollection<Story>? Stories { get; set; }
+        public ICollection<UserMission>? UserMissions { get; set; }
+
 
     }
     public enum StatusEnum

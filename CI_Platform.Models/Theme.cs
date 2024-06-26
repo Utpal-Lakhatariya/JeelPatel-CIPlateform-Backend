@@ -17,7 +17,7 @@ namespace CI_Platform.Models
 
         [Required]
         [MaxLength(50)]
-        public string theme {  get; set; }
+        public string? theme {  get; set; }
         [Required]
         public bool Status { get; set; }
 

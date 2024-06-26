@@ -14,7 +14,11 @@ namespace CI_Platform.Services.Interface
         Task<JsonResult>GetCityById(Int64 id);
 
         //-------------------------------------Get Mission----------------------------
-        Task<JsonResult> GetAllMissions(long country, long city, string theme, string skill, string searchTerm, int sortingOption);
+        Task<JsonResult> GetFilter();
+        Task<JsonResult> GetAllMissions(MissionFilter missionFilter);
+
+        Task<JsonResult> RatingService(int missionId, int ratingValue);
+        Task<JsonResult> FavouriteService(int missionId, int userId );
 
         //-------------------------------------Create Mission----------------------------
         Task<JsonResult> GetNewMission();

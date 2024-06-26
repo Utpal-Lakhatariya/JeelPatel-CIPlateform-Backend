@@ -16,10 +16,10 @@ namespace CI_Platform.Models
         public int StoryId { get; set; }
         [Required]
         [Column("StoryTitle")]
-        public string StoryName { get; set;}
+        public string StoryTitle { get; set;}
         [Required]
         [Column("MissionTitle")]
-        public string MissionName {  get; set;}
+        public string MissionTitle {  get; set;}
 
         [Required]
         [ForeignKey("User")]
@@ -27,7 +27,7 @@ namespace CI_Platform.Models
         [Required]
         public string? StoryDescription { get; set; }
 
-        public bool? Publish {  get; set; }
+        public bool? Status {  get; set; }
         public User? User { get; set; }
     }
 }

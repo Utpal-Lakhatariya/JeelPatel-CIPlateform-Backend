@@ -5,20 +5,11 @@ using CI_Platform.Models.RequestModel;
 using CI_Platform.Models.ResponseModel;
 using CI_Platform.Repository.Interface;
 using Dapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using static CI_Platform.Models.ResponseModel.GetNewMissionResponseModel;
 
 namespace CI_Platform.Repository.Implementation
 {
@@ -31,9 +22,13 @@ namespace CI_Platform.Repository.Implementation
         {
             _context = context;
             this.mapper = mapper;
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
         }
 
+        public IDbContextTransaction BeginTransaction()
+        {
+            return _context.Database.BeginTransaction();
+        }
 
         //----------------------------------------------Common DB Methods-----------------------------------------------
 
@@ -78,6 +73,16 @@ namespace CI_Platform.Repository.Implementation
             }).ToList();
             return skills;
         }
+        public List<DropdownResponseModel> GetCity()
+        {
+            var cities = _context.Cities.Select(i => new DropdownResponseModel()
+            {
+                Value = i.CityId,
+                Name = i.CityName
+            }).ToList();
+            return cities;
+        }
+
 
         #endregion
 
@@ -95,7 +100,7 @@ namespace CI_Platform.Repository.Implementation
         /// <param name="searchTerm"></param>
         /// <returns>Mission Data</returns>
 
-        public async Task<IEnumerable<GetMissionResponseModel>> GetAllMissions(long country, long city, string theme, string skill, string searchTerm, int sortingOption)
+        public async Task<IEnumerable<GetMissionResponseModel>> GetAllMissions(MissionFilter missionFilter)
         {
 
             using (var connection = new NpgsqlConnection(_connectionString))
@@ -104,22 +109,73 @@ namespace CI_Platform.Repository.Implementation
 
                 var missionData = await connection.QueryAsync<GetMissionResponseModel>
                     (
-                        "SELECT * FROM GetMissions(@p_country, @p_city, @p_theme, @p_skill, @p_searchTerm, @p_sortingOption)",
+                        "SELECT * FROM GetMissionsData(@p_user_id, @p_country,  @p_city, @p_theme, @p_skill, @p_sortingOption, @p_searchTerm)",
                         new
                         {
-                            p_country = country,
-                            p_city = city,
-                            p_theme = theme,
-                            p_skill = skill,
-                            p_searchTerm = searchTerm,
-                            p_sortingOption = sortingOption
+                            p_country = missionFilter.Country,
+                            p_city = missionFilter.Cities.Count == 0 ? null : missionFilter.Cities,
+                            p_theme = missionFilter.Themes.Count == 0 ? null : missionFilter.Themes,
+                            p_skill = missionFilter.Skills.Count == 0 ? null : missionFilter.Skills,
+                            p_searchTerm = missionFilter.SearchValue,
+                            p_sortingOption = missionFilter.SortingOption,
+                            p_user_id = 2
                         }
                     );
-                    return missionData;
+                return missionData;
             }
 
         }
 
+        //public async Task<GetMissionResponseModel> GetMissionDetailRepo(int missionId)
+        //{
+        //    using(var connection = new NpgsqlConnection(_connectionString))
+        //            {
+        //        connection.Open ();
+
+        //        var missionDetails = await connection.QueryAsync<GetMissionResponseModel>
+        //            (
+        //            );
+        //        return missionDetails;
+        //    }
+        //}
+
+        public async Task Rating(int missionId, int ratingValue)
+        {
+            var mission = await _context.Missions.FirstOrDefaultAsync(i => i.MissionId == missionId);
+            var userMission = await _context.UserMissions.FirstOrDefaultAsync(i => i.MissionId == missionId);
+            if (mission == null) return;
+
+            if (userMission == null)
+            {
+                userMission!.MissionId = missionId;
+            }
+            mission.MissionRating = ratingValue;
+            userMission.Ratings = ratingValue;
+            await _context.SaveChangesAsync();
+        }
+
+
+        public async Task Favourite(int missionId, int userId)
+        {
+            var userMission = await _context.UserMissions.FirstOrDefaultAsync(i => i.MissionId == missionId);
+            if (userMission == null)
+            {
+                UserMission data = new UserMission
+                {
+                    UserId = userId,
+                    MissionId = missionId,
+                    Favourite = 1
+                };
+                await _context.UserMissions.AddAsync(data);
+
+            }
+            else
+            {
+                userMission.Favourite = userMission.Favourite == 0 ? 1 : 0;
+            }
+
+            await _context.SaveChangesAsync();
+        }
         #endregion
         //-------------------------------------------Create New Mission------------------------------------------
 
@@ -133,34 +189,34 @@ namespace CI_Platform.Repository.Implementation
         /// </returns>
 
 
-        public Task<JsonResult> GetNewMission()
-        {
-            CreateMissionResponseModel createMissionResponseModel = new CreateMissionResponseModel()
-            {
-                Country = GetCountry(),
-                Skill = GetSkill(),
-                Theme = GetTheme(),
+        //public Task<JsonResult> GetNewMission()
+        //{
+        //    CreateMissionResponseModel createMissionResponseModel = new CreateMissionResponseModel()
+        //    {
+        //        Country = GetCountry(),
+        //        Skill = GetSkill(),
+        //        Theme = GetTheme(),
 
-            };
-            if (createMissionResponseModel != null)
-            {
-                return Task.FromResult(new JsonResult(new Response<CreateMissionResponseModel>()
-                {
-                    Data = createMissionResponseModel,
-                    Message = "",
-                    IsSuccess = true,
-                    StatusCode = 200,
-                }));
-            }
-            return Task.FromResult(new JsonResult(new Response<CreateMissionResponseModel>()
-            {
-                Data = null,
-                Message = "",
-                IsSuccess = false,
-                StatusCode = 404,
-            }));
+        //    };
+        //    if (createMissionResponseModel != null)
+        //    {
+        //        return Task.FromResult(new JsonResult(new Response<CreateMissionResponseModel>()
+        //        {
+        //            Data = createMissionResponseModel,
+        //            Message = "",
+        //            IsSuccess = true,
+        //            StatusCode = 200,
+        //        }));
+        //    }
+        //    return Task.FromResult(new JsonResult(new Response<CreateMissionResponseModel>()
+        //    {
+        //        Data = null,
+        //        Message = "",
+        //        IsSuccess = false,
+        //        StatusCode = 404,
+        //    }));
 
-        }
+        //}
 
 
         /// <summary>
@@ -196,6 +252,18 @@ namespace CI_Platform.Repository.Implementation
             }
         }
 
+        public async Task AddMissionSkills(List<MissionSkill> missionSkills)
+        {
+            try
+            {
+                await _context.AddRangeAsync(missionSkills);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         #endregion
 
     }

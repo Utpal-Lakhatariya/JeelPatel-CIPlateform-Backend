@@ -13,6 +13,7 @@ namespace CI_Platform.Models.DBContext
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<UserMission> UserMissions { get; set; }
         public DbSet<Admin> Admins{ get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Country> Countries { get; set; }
@@ -22,6 +23,8 @@ namespace CI_Platform.Models.DBContext
         public DbSet<Mission> Missions{ get; set; }
         public DbSet<MissionApplication> MissionApplications{ get; set; }
         public DbSet<MissionMedia> MissionMedias { get; set; }
+        public DbSet<MissionSkill> MissionSkills { get; set; }
+        public DbSet<MissionType> MissionTypes { get; set; }
         public DbSet<VolunteeringTimesheet> VolunteeringTimesheets { get; set; }
         public DbSet<RecentVolunteer> RecentVolunteers { get; set; }
         public DbSet<CMSPrivacyPolicy> CMSPrivacyPolicys { get; set; }

@@ -28,7 +28,7 @@ namespace CI_Platform_Backend.Controllers
         /// <param name="loginRequestModel"></param>
         /// <returns></returns>
         #region Login
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequestModel loginRequestModel)
         {
             return await _authService.Login(loginRequestModel);

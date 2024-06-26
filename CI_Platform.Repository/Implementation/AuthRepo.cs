@@ -22,15 +22,17 @@ namespace CI_Platform.Repository.Implementation
             this.mapper = mapper;
         }
 
+       
         #region Login
         public async Task<User?> Login(LoginRequestModel loginRequest)
         {
+            //  retrieve the user from the database 
             User? user = await _context.Users.FirstOrDefaultAsync(i => i.Email == loginRequest.Email);
-
             if (user == null)
             {
                 return null;
             }
+            // If a user is found, check if the provided password matches the user's password.
             if (user != null && user.Password == loginRequest.Password)
             {
                 return user;
@@ -66,7 +68,7 @@ namespace CI_Platform.Repository.Implementation
         {
             try
             {
-                var userCheck = await FindUserByEmailAsync(signupRequestModel.Email);
+                var userCheck = await FindUserByEmailAsync(signupRequestModel.Email!);
                 if (userCheck != null)
                 {
                     return new JsonResult(new Response<string>()
@@ -77,6 +79,7 @@ namespace CI_Platform.Repository.Implementation
                         StatusCode = 404,
                     });
                 }
+
                 var data = mapper.Map<User>(signupRequestModel);
                 data.Status = 0;
                 data.CityId = 1;

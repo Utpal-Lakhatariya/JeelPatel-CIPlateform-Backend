@@ -8,9 +8,9 @@ namespace CI_Platform.Models.ResponseModel
 {
     public class CreateMissionResponseModel
     {
-       // public List<DropdownResponseModel>City {  get; set; }
-        public List<DropdownResponseModel>? Country {  get; set; }
-        public List<DropdownResponseModel>? Skill {  get; set; }
-        public List<DropdownResponseModel>? Theme {  get; set; }
+        public List<DropdownResponseModel> Cities { get; set; }
+        public List<DropdownResponseModel>? Countries {  get; set; }
+        public List<DropdownResponseModel>? Skills {  get; set; }
+        public List<DropdownResponseModel>? Themes {  get; set; }
     }
 }

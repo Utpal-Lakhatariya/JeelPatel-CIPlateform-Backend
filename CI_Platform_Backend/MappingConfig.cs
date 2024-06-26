@@ -15,10 +15,10 @@ namespace CI_Platform_Backend
             CreateMap<User, SignupRequestModel>().ReverseMap();
             CreateMap<CreateMissionRequestModel, Mission>().ReverseMap();
             CreateMap<CreateMissionRequestModel, MissionMedia>().ReverseMap();
-            CreateMap<MissionResponseSubModel, Mission>().ReverseMap()
-                .ForMember(src => src.City, opt => opt.MapFrom(des => des.City!=null ? des.City.CityName : null))
-                .ForMember(src => src.Country, opt => opt.MapFrom(des => des.Country!=null ? des.Country.CountryName: null));
-            CreateMap<MissionMediaResponseSubModel, MissionMedia>().ReverseMap();
+            //CreateMap<MissionResponseSubModel, Mission>().ReverseMap()
+            //    .ForMember(src => src.City, opt => opt.MapFrom(des => des.City!=null ? des.City.CityName : null))
+            //    .ForMember(src => src.Country, opt => opt.MapFrom(des => des.Country!=null ? des.Country.CountryName: null));
+            //CreateMap<MissionMediaResponseSubModel, MissionMedia>().ReverseMap();
             //CreateMap<DropdownResponseModel, City>()
             //    .ForMember(src => src.CityId, opt => opt.MapFrom(des => des.Value))
             //    .ForMember(src => src.CityName, opt => opt.MapFrom(des => des.Text)).ReverseMap();

@@ -1,27 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CI_Platform.Models
 {
-    [Table("StoryMedia")]
-    public class StoryMedia
+    public class MissionSkill
     {
         [Key]
         [MaxLength(20)]
-        public Int64 MediaId { get; set; }
+        public Int64 Id { get; set; }
 
-        public byte[]? Image { get; set; }
-        public byte[]? Document { get; set; }
+        [MaxLength(10)]
+        [ForeignKey("Skill")]
+        public int SkillId { get; set; }
 
-        [Required]
+        [MaxLength(20)]
         [ForeignKey("Mission")]
         public int MissionId { get; set; }
 
-        public Mission? Mission { get; set; }
+        public Skill Skill { get; set; }
+        public Mission Mission { get; set; }
     }
 }

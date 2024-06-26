@@ -3,6 +3,7 @@ using System;
 using CI_Platform.Models.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CI_Platform.Models.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240621043303_Mission table update")]
+    partial class Missiontableupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -319,9 +322,6 @@ namespace CI_Platform.Models.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("integer");
 
-                    b.Property<int>("TotalGoal")
-                        .HasColumnType("integer");
-
                     b.Property<int?>("TotalSeats")
                         .HasMaxLength(50)
                         .HasColumnType("integer");
@@ -334,8 +334,6 @@ namespace CI_Platform.Models.Migrations
                     b.HasIndex("CityId");
 
                     b.HasIndex("CountryId");
-
-                    b.HasIndex("ThemeId");
 
                     b.ToTable("Mission");
                 });
@@ -400,55 +398,6 @@ namespace CI_Platform.Models.Migrations
                     b.ToTable("MissionMedia");
                 });
 
-            modelBuilder.Entity("CI_Platform.Models.MissionSkill", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(20)
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("MissionId")
-                        .HasMaxLength(20)
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SkillId")
-                        .HasMaxLength(10)
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MissionId");
-
-                    b.HasIndex("SkillId");
-
-                    b.ToTable("MissionSkills");
-                });
-
-            modelBuilder.Entity("CI_Platform.Models.MissionType", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(20)
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("MissionId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MissionId");
-
-                    b.ToTable("MissionTypes");
-                });
-
             modelBuilder.Entity("CI_Platform.Models.RecentVolunteer", b =>
                 {
                     b.Property<long>("VolunteerId")
@@ -503,19 +452,19 @@ namespace CI_Platform.Models.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StoryId"));
 
-                    b.Property<string>("MissionTitle")
+                    b.Property<string>("MissionName")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("MissionTitle");
 
-                    b.Property<bool?>("Status")
+                    b.Property<bool?>("Publish")
                         .HasColumnType("boolean");
 
                     b.Property<string>("StoryDescription")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("StoryTitle")
+                    b.Property<string>("StoryName")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("StoryTitle");
@@ -670,41 +619,6 @@ namespace CI_Platform.Models.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("CI_Platform.Models.UserMission", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(20)
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("Favourite")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MissionId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Ratings")
-                        .HasMaxLength(10)
-                        .HasColumnType("int");
-
-                    b.Property<long>("UserId")
-                        .HasMaxLength(20)
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("UserStatus")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MissionId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserMissions");
-                });
-
             modelBuilder.Entity("CI_Platform.Models.VolunteeringTimesheet", b =>
                 {
                     b.Property<long>("VolunteeringId")
@@ -777,17 +691,9 @@ namespace CI_Platform.Models.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CI_Platform.Models.Theme", "Theme")
-                        .WithMany()
-                        .HasForeignKey("ThemeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("City");
 
                     b.Navigation("Country");
-
-                    b.Navigation("Theme");
                 });
 
             modelBuilder.Entity("CI_Platform.Models.MissionApplication", b =>
@@ -813,36 +719,6 @@ namespace CI_Platform.Models.Migrations
                 {
                     b.HasOne("CI_Platform.Models.Mission", "Mission")
                         .WithMany("MissionMedias")
-                        .HasForeignKey("MissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Mission");
-                });
-
-            modelBuilder.Entity("CI_Platform.Models.MissionSkill", b =>
-                {
-                    b.HasOne("CI_Platform.Models.Mission", "Mission")
-                        .WithMany("MissionSkills")
-                        .HasForeignKey("MissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CI_Platform.Models.Skill", "Skill")
-                        .WithMany()
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Mission");
-
-                    b.Navigation("Skill");
-                });
-
-            modelBuilder.Entity("CI_Platform.Models.MissionType", b =>
-                {
-                    b.HasOne("CI_Platform.Models.Mission", "Mission")
-                        .WithMany("MissionTypes")
                         .HasForeignKey("MissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -883,7 +759,7 @@ namespace CI_Platform.Models.Migrations
             modelBuilder.Entity("CI_Platform.Models.StoryMedia", b =>
                 {
                     b.HasOne("CI_Platform.Models.Mission", "Mission")
-                        .WithMany("StoryMedia")
+                        .WithMany()
                         .HasForeignKey("MissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -908,25 +784,6 @@ namespace CI_Platform.Models.Migrations
                     b.Navigation("City");
 
                     b.Navigation("Country");
-                });
-
-            modelBuilder.Entity("CI_Platform.Models.UserMission", b =>
-                {
-                    b.HasOne("CI_Platform.Models.Mission", "Mission")
-                        .WithMany("UserMissions")
-                        .HasForeignKey("MissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CI_Platform.Models.User", "User")
-                        .WithMany("UserMissions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Mission");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CI_Platform.Models.VolunteeringTimesheet", b =>
@@ -962,15 +819,7 @@ namespace CI_Platform.Models.Migrations
 
                     b.Navigation("MissionMedias");
 
-                    b.Navigation("MissionSkills");
-
-                    b.Navigation("MissionTypes");
-
                     b.Navigation("RecentVolunteers");
-
-                    b.Navigation("StoryMedia");
-
-                    b.Navigation("UserMissions");
 
                     b.Navigation("VolunteeringTimesheets");
                 });
@@ -984,8 +833,6 @@ namespace CI_Platform.Models.Migrations
                     b.Navigation("RecentVolunteers");
 
                     b.Navigation("Stories");
-
-                    b.Navigation("UserMissions");
                 });
 #pragma warning restore 612, 618
         }

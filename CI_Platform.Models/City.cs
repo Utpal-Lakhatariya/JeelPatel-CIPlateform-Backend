@@ -15,13 +15,14 @@ namespace CI_Platform.Models
         public Int64 CityId { get; set; }
 
         [Required]
-        [ForeignKey("City")]
+        [ForeignKey("Country")]
         public Int64? CountryId { get; set; }
 
         [Required]
         [Column("City")]
         public string? CityName {  get; set; }
 
+        public Country? Country { get; set; }
         public ICollection<User?>? Users { get; set; }
         public ICollection<Mission?>? Missions{ get; set; }
     }

@@ -21,7 +21,7 @@ namespace CI_Platform.Models
 
         public ICollection<User?>? Users { get; set; }
 
-        public ICollection<City> Cities { get; set; }
+        public required ICollection<City> Cities { get; set; }
         public ICollection<Mission?>? Missions { get; set; }
 
     }

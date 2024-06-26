@@ -46,11 +46,11 @@ namespace CI_Platform.Models
 
         [Required]
         [Column(TypeName = "date")]
-        public DateTime MissionStartDate { get; set; }
+        public DateOnly MissionStartDate { get; set; }
 
         [Required]
         [Column(TypeName = "date")]
-        public DateTime MissionEndDate { get; set; }
+        public DateOnly MissionEndDate { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -58,6 +58,13 @@ namespace CI_Platform.Models
 
         [MaxLength(50)]
         public int? TotalSeats { get; set; }
+
+        public int? OccupiedSeats { get; set; }
+
+        public string? GoalObject {  get; set; }
+
+        public int TotalGoal {  get; set; }
+        public int? AchievedGoal { get; set; }
 
         [MaxLength(20)]
         public int? MissionRating { get; set; }
@@ -67,14 +74,13 @@ namespace CI_Platform.Models
 
         [Required]
         [Column(TypeName = "date")]
-        public DateTime MissionRegistrationDeadline { get; set; }
+        public DateOnly MissionRegistrationDeadline { get; set; }
 
         [Required]
         [MaxLength(20)]
-        public string? MissionTheme { get; set; }
+        public int? ThemeId { get; set; }
 
-        [MaxLength(20)]
-        public string?  MissionSkills { get; set; }
+        
 
         [Required]
         public int MissionAvailability { get; set; }
@@ -91,12 +97,21 @@ namespace CI_Platform.Models
 
         public City? City { get; set; }
         public Country? Country { get; set; }
+        public Theme? Theme { get; set; }
+
 
         public ICollection<MissionMedia>? MissionMedias { get; set; }
         public ICollection<MissionApplication>? MissionApplications { get; set; }
         public ICollection<RecentVolunteer>? RecentVolunteers { get; set; }
 
         public ICollection<VolunteeringTimesheet>? VolunteeringTimesheets { get; set; }
+        public ICollection<StoryMedia>? StoryMedia { get; set; }
+
+        public ICollection<UserMission>? UserMissions { get; set; }
+
+        public ICollection<MissionSkill>? MissionSkills { get; set; }
+
+        public ICollection<MissionType>? MissionTypes { get; set; }
 
 
     }

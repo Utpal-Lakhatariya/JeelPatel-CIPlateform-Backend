@@ -74,7 +74,7 @@ builder.Services.AddAuthentication(cfg =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8
-            .GetBytes(configuration["ApplicationSettings:JWT_Secret"])
+            .GetBytes(configuration["ApplicationSettings:JWT_Secret"]!)
         ),
         ValidateIssuer = false,
         ValidateAudience = false,

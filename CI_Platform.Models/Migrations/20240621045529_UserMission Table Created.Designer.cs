@@ -3,6 +3,7 @@ using System;
 using CI_Platform.Models.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CI_Platform.Models.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240621045529_UserMission Table Created")]
+    partial class UserMissionTableCreated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -319,9 +322,6 @@ namespace CI_Platform.Models.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("integer");
 
-                    b.Property<int>("TotalGoal")
-                        .HasColumnType("integer");
-
                     b.Property<int?>("TotalSeats")
                         .HasMaxLength(50)
                         .HasColumnType("integer");
@@ -334,8 +334,6 @@ namespace CI_Platform.Models.Migrations
                     b.HasIndex("CityId");
 
                     b.HasIndex("CountryId");
-
-                    b.HasIndex("ThemeId");
 
                     b.ToTable("Mission");
                 });
@@ -503,19 +501,19 @@ namespace CI_Platform.Models.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StoryId"));
 
-                    b.Property<string>("MissionTitle")
+                    b.Property<string>("MissionName")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("MissionTitle");
 
-                    b.Property<bool?>("Status")
+                    b.Property<bool?>("Publish")
                         .HasColumnType("boolean");
 
                     b.Property<string>("StoryDescription")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("StoryTitle")
+                    b.Property<string>("StoryName")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("StoryTitle");
@@ -777,17 +775,9 @@ namespace CI_Platform.Models.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CI_Platform.Models.Theme", "Theme")
-                        .WithMany()
-                        .HasForeignKey("ThemeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("City");
 
                     b.Navigation("Country");
-
-                    b.Navigation("Theme");
                 });
 
             modelBuilder.Entity("CI_Platform.Models.MissionApplication", b =>
@@ -823,7 +813,7 @@ namespace CI_Platform.Models.Migrations
             modelBuilder.Entity("CI_Platform.Models.MissionSkill", b =>
                 {
                     b.HasOne("CI_Platform.Models.Mission", "Mission")
-                        .WithMany("MissionSkills")
+                        .WithMany()
                         .HasForeignKey("MissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -842,7 +832,7 @@ namespace CI_Platform.Models.Migrations
             modelBuilder.Entity("CI_Platform.Models.MissionType", b =>
                 {
                     b.HasOne("CI_Platform.Models.Mission", "Mission")
-                        .WithMany("MissionTypes")
+                        .WithMany()
                         .HasForeignKey("MissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -883,7 +873,7 @@ namespace CI_Platform.Models.Migrations
             modelBuilder.Entity("CI_Platform.Models.StoryMedia", b =>
                 {
                     b.HasOne("CI_Platform.Models.Mission", "Mission")
-                        .WithMany("StoryMedia")
+                        .WithMany()
                         .HasForeignKey("MissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -913,13 +903,13 @@ namespace CI_Platform.Models.Migrations
             modelBuilder.Entity("CI_Platform.Models.UserMission", b =>
                 {
                     b.HasOne("CI_Platform.Models.Mission", "Mission")
-                        .WithMany("UserMissions")
+                        .WithMany()
                         .HasForeignKey("MissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CI_Platform.Models.User", "User")
-                        .WithMany("UserMissions")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -962,15 +952,7 @@ namespace CI_Platform.Models.Migrations
 
                     b.Navigation("MissionMedias");
 
-                    b.Navigation("MissionSkills");
-
-                    b.Navigation("MissionTypes");
-
                     b.Navigation("RecentVolunteers");
-
-                    b.Navigation("StoryMedia");
-
-                    b.Navigation("UserMissions");
 
                     b.Navigation("VolunteeringTimesheets");
                 });
@@ -984,8 +966,6 @@ namespace CI_Platform.Models.Migrations
                     b.Navigation("RecentVolunteers");
 
                     b.Navigation("Stories");
-
-                    b.Navigation("UserMissions");
                 });
 #pragma warning restore 612, 618
         }

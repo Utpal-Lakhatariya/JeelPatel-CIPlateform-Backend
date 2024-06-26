@@ -58,17 +58,13 @@ namespace CI_Platform.Services.Implementation
                     IsSuccess = false,
                     StatusCode = StatusCodes.Status400BadRequest,
                 });
-            }
+           }
 
             var jwtToken = await _jwtService.GenerateJWTToken(user);
 
-            LoginResponseModel loginResponseModel = new LoginResponseModel()
+            return new JsonResult(new Response<string>()
             {
-                Token = jwtToken
-            };
-            return new JsonResult(new Response<LoginResponseModel>()
-            {
-                Data = loginResponseModel,
+                Data = jwtToken,
                 Message = "Login Successfully",
                 IsSuccess = true,
                 StatusCode = 200,
@@ -102,8 +98,8 @@ namespace CI_Platform.Services.Implementation
             
             var user = await _repo.ForgotPassWord(forgotPasswordRequestModel);
 
-           
-            var token = await _jwtService.GenerateJWTToken( user.Value as User);
+
+            var token = await _jwtService.GenerateJWTToken(user.Value as User);
             if(token == null)
             {
                 return new JsonResult(new Response<string>()
@@ -115,7 +111,7 @@ namespace CI_Platform.Services.Implementation
                 });
 
             }
-            await _repo.EmailSenderWithToken(forgotPasswordRequestModel.Email, token);
+            await _repo.EmailSenderWithToken(forgotPasswordRequestModel.Email!, token);
             return new JsonResult(new Response<string>()
             {
                 Data = token,

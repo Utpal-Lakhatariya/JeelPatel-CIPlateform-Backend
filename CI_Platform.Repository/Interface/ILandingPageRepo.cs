@@ -2,6 +2,7 @@
 using CI_Platform.Models.RequestModel;
 using CI_Platform.Models.ResponseModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,27 +13,31 @@ namespace CI_Platform.Repository.Interface
 {
     public interface ILandingPageRepo
     {
-
+        IDbContextTransaction BeginTransaction();
         //---------------------------Common DB --------------------------------
         List<DropdownResponseModel> GetCityById(Int64 id);
         List<DropdownResponseModel> GetCountry();
 
-        //List<DropdownResponseModel> GetTheme();
+        List<DropdownResponseModel> GetTheme();
 
         List<DropdownResponseModel> GetSkill();
+        List<DropdownResponseModel> GetCity();
 
 
         //-------------------------------------Get Mission----------------------------
+        
+        Task<IEnumerable<GetMissionResponseModel>> GetAllMissions(MissionFilter missionFilter);
 
-        Task<IEnumerable<GetMissionResponseModel>> GetAllMissions(long country, long city, string theme, string skill, string searchTerm, int sortingOption);
+        //Task<GetMissionResponseModel> GetMissionDetailRepo(int missionId);
+        Task Rating(int missionId, int ratingValue);
 
-
+        Task Favourite(int missionId, int userId);
         //-------------------------------------Create Mission----------------------------
 
-        Task<JsonResult> GetNewMission();
+        //Task<JsonResult> GetNewMission();
         
         Task CreateMission(Mission mission);
         Task AddMissionMedia(MissionMedia missionMedia);
-
+        Task AddMissionSkills(List<MissionSkill> missionSkills);
     }
 }

@@ -24,12 +24,27 @@ namespace CI_Platform_Backend.Controllers
             return await _landingPageService.GetCityById(id);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllMission([FromQuery]long country=0, long city = 0, string theme="", string skill="", string searchTerm="", int sortingOption=0)
+        [HttpGet("mission-filter")]
+        public async Task<IActionResult> GetFilter()
         {
-            return await _landingPageService.GetAllMissions(country, city, theme, skill, searchTerm, sortingOption);
+            return await _landingPageService.GetFilter();
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllMission([FromQuery] MissionFilter missionFilter)
+        {
+            return await _landingPageService.GetAllMissions(missionFilter);
         }
 
+        [HttpPut("rating")]
+        public async Task<IActionResult> MissionRating([FromQuery] int missionId, int ratingValue)
+        {
+            return await _landingPageService.RatingService(missionId, ratingValue);
+        } 
+        [HttpPost("favourite")]
+        public async Task<IActionResult> MissionFavourite([FromQuery] int missionId, int userId )
+        {
+            return await _landingPageService.FavouriteService(missionId, userId);
+        }
         /// <summary>
         /// Get creat Mission Form 
         /// </summary>

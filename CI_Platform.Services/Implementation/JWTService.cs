@@ -31,7 +31,7 @@ namespace CI_Platform.Services.Implementation
             var claims = new List<Claim>
             {
                 new Claim("UserId", user.UserId.ToString()),
-                new Claim("Email", user.Email),
+                new Claim("Email", user.Email!),
             };
             var jwtToken = new JwtSecurityToken(
                 claims: claims,
@@ -39,7 +39,7 @@ namespace CI_Platform.Services.Implementation
                 expires: DateTime.UtcNow.AddMinutes(30),
                 signingCredentials: new SigningCredentials(
                     new SymmetricSecurityKey(
-                       Encoding.UTF8.GetBytes(configuration["ApplicationSettings:JWT_Secret"])
+                       Encoding.UTF8.GetBytes(configuration["ApplicationSettings:JWT_Secret"]!)
                         ),
                     SecurityAlgorithms.HmacSha256Signature)
                 );

@@ -38,8 +38,8 @@ namespace CI_Platform.Models.Migrations
                 {
                     CityId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Country = table.Column<string>(type: "text", nullable: false),
-                    City = table.Column<string>(type: "text", nullable: false)
+                    Country = table.Column<string>(type: "character varying (16)", nullable: false),
+                    City = table.Column<string>(type: "character varying (16)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,7 +68,7 @@ namespace CI_Platform.Models.Migrations
                 {
                     CountryId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Country = table.Column<string>(type: "text", nullable: false)
+                    Country = table.Column<string>(type: "character varying (16)", nullable: false)
                 },
                 constraints: table =>
                 {
